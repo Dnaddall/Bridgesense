@@ -1,0 +1,2600 @@
+{
+  "info": {
+    "title": "bridgesense_data",
+    "x-type": "odata",
+    "x-connector": "postgresql"
+  },
+  "definitions": {
+    "Bridge": {
+      "x-table": "public.bridges",
+      "resource": "Bridges",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "latitude": {
+          "type": "number",
+          "format": "double"
+        },
+        "longitude": {
+          "type": "number",
+          "format": "double"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "id": {
+          "x-key": true,
+          "x-default-sql": "nextval('bridges_id_seq'::regclass)",
+          "x-nullable": false,
+          "type": "integer",
+          "x-navigation": [
+            {
+              "inversePropertyName": "Bridge",
+              "name": "Bridgelogs",
+              "type": "Bridgelog"
+            },
+            {
+              "inversePropertyName": "Bridge",
+              "name": "Sensors",
+              "type": "Sensor"
+            },
+            {
+              "inversePropertyName": "Bridge",
+              "name": "Bridgestats",
+              "type": "Bridgestat"
+            },
+            {
+              "inversePropertyName": "Bridge",
+              "name": "SensorEventCounts",
+              "type": "SensorEventCount"
+            }
+          ]
+        },
+        "name": {
+          "x-nullable": false,
+          "type": "string"
+        },
+        "vild_code": {
+          "x-default-sql": "''::text",
+          "x-nullable": false,
+          "type": "string"
+        },
+        "owner": {
+          "x-default-sql": "''::text",
+          "x-nullable": false,
+          "type": "string"
+        },
+        "manager": {
+          "x-default-sql": "''::text",
+          "x-nullable": false,
+          "type": "string"
+        },
+        "isrs": {
+          "x-default-sql": "''::text",
+          "x-nullable": false,
+          "type": "string"
+        },
+        "Bridgelogs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Bridgelog"
+          }
+        },
+        "Sensors": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Sensor"
+          }
+        },
+        "Bridgestats": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Bridgestat"
+          }
+        },
+        "SensorEventCounts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SensorEventCount"
+          }
+        }
+      }
+    },
+    "Bridgelog": {
+      "x-table": "public.bridgelog",
+      "resource": "Bridgelogs",
+      "required": [
+        "bridgeid",
+        "id",
+        "situationid",
+        "action",
+        "event1"
+      ],
+      "properties": {
+        "Bridge": {
+          "type": "object",
+          "$ref": "#/definitions/Bridge"
+        },
+        "bridgeid": {
+          "x-nullable": false,
+          "type": "integer",
+          "x-foreignKey": {
+            "parentTable": "bridges",
+            "parentEntityType": "Bridge",
+            "type": "Bridge",
+            "principalKey": "id",
+            "name": "Bridge",
+            "textProperty": "name",
+            "navigationProperty": "Bridgelogs"
+          }
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "id": {
+          "x-key": true,
+          "x-identity": true,
+          "x-nullable": false,
+          "type": "integer",
+          "format": "int64"
+        },
+        "duration": {
+          "x-default-sql": "'-1'::integer",
+          "x-nullable": false,
+          "type": "integer"
+        },
+        "situationid": {
+          "x-nullable": false,
+          "type": "string",
+          "length": 128
+        },
+        "action": {
+          "x-nullable": false,
+          "type": "string",
+          "length": 50
+        },
+        "event1": {
+          "x-original-name": "event",
+          "x-nullable": false,
+          "type": "string",
+          "length": 50
+        }
+      }
+    },
+    "Bridgestat": {
+      "x-table": "public.bridgestats",
+      "resource": "Bridgestats",
+      "required": [
+        "period"
+      ],
+      "properties": {
+        "Bridge": {
+          "type": "object",
+          "$ref": "#/definitions/Bridge"
+        },
+        "bridge_id": {
+          "type": "integer",
+          "x-foreignKey": {
+            "parentTable": "bridges",
+            "parentEntityType": "Bridge",
+            "type": "Bridge",
+            "principalKey": "id",
+            "name": "Bridge",
+            "textProperty": "name",
+            "navigationProperty": "Bridgestats"
+          }
+        },
+        "max": {
+          "type": "integer"
+        },
+        "min": {
+          "type": "integer"
+        },
+        "avg": {
+          "type": "integer"
+        },
+        "std": {
+          "type": "integer"
+        },
+        "id": {
+          "x-key": true,
+          "x-default-sql": "nextval('bridgestats_id_seq'::regclass)",
+          "x-nullable": false,
+          "type": "integer"
+        },
+        "period": {
+          "x-nullable": false,
+          "type": "integer"
+        }
+      }
+    },
+    "LastLuxEvent": {
+      "x-table": "public.last_lux_events",
+      "resource": "LastLuxEvents",
+      "required": [
+        "timestamp",
+        "last_lux",
+        "sensor_udid"
+      ],
+      "properties": {
+        "timestamp": {
+          "x-nullable": false,
+          "type": "string",
+          "format": "date-time"
+        },
+        "last_lux": {
+          "x-nullable": false,
+          "type": "integer"
+        },
+        "id": {
+          "x-key": true,
+          "x-default-sql": "nextval('last_lux_events_id_seq'::regclass)",
+          "x-nullable": false,
+          "type": "integer"
+        },
+        "sensor_udid": {
+          "x-nullable": false,
+          "type": "string",
+          "length": 40
+        },
+        "event1": {
+          "x-original-name": "event",
+          "type": "string",
+          "length": 8
+        }
+      }
+    },
+    "Sensor": {
+      "x-table": "public.sensors",
+      "resource": "Sensors",
+      "required": [
+        "bridge_id",
+        "udid",
+        "sensortype"
+      ],
+      "properties": {
+        "Bridge": {
+          "type": "object",
+          "$ref": "#/definitions/Bridge"
+        },
+        "bridge_id": {
+          "x-nullable": false,
+          "type": "integer",
+          "x-foreignKey": {
+            "parentTable": "bridges",
+            "parentEntityType": "Bridge",
+            "type": "Bridge",
+            "principalKey": "id",
+            "name": "Bridge",
+            "textProperty": "name",
+            "navigationProperty": "Sensors"
+          }
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "id": {
+          "x-key": true,
+          "x-default-sql": "nextval('sensors_id_seq'::regclass)",
+          "x-nullable": false,
+          "type": "integer",
+          "x-navigation": [
+            {
+              "inversePropertyName": "Sensor",
+              "name": "SensorEvents",
+              "type": "SensorEvent"
+            },
+            {
+              "inversePropertyName": "Sensor",
+              "name": "SensorStatuses",
+              "type": "SensorStatus"
+            },
+            {
+              "inversePropertyName": "Sensor",
+              "name": "SensorstatsLights",
+              "type": "SensorstatsLight"
+            },
+            {
+              "inversePropertyName": "Sensor",
+              "name": "SensorEventCounts",
+              "type": "SensorEventCount"
+            }
+          ]
+        },
+        "udid": {
+          "x-nullable": false,
+          "type": "string",
+          "length": 40
+        },
+        "sensortype": {
+          "x-nullable": false,
+          "type": "string",
+          "length": 20
+        },
+        "SensorEvents": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SensorEvent"
+          }
+        },
+        "SensorStatuses": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SensorStatus"
+          }
+        },
+        "SensorstatsLights": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SensorstatsLight"
+          }
+        },
+        "SensorEventCounts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SensorEventCount"
+          }
+        }
+      }
+    },
+    "SensorEvent": {
+      "x-table": "public.sensor_events",
+      "resource": "SensorEvents",
+      "required": [
+        "timestamp",
+        "sensor_id",
+        "sensor_udid"
+      ],
+      "properties": {
+        "timestamp": {
+          "x-nullable": false,
+          "type": "string",
+          "format": "date-time"
+        },
+        "Sensor": {
+          "type": "object",
+          "$ref": "#/definitions/Sensor"
+        },
+        "sensor_id": {
+          "x-nullable": false,
+          "type": "integer",
+          "x-foreignKey": {
+            "parentTable": "sensors",
+            "parentEntityType": "Sensor",
+            "type": "Sensor",
+            "principalKey": "id",
+            "name": "Sensor",
+            "textProperty": "udid",
+            "navigationProperty": "SensorEvents"
+          }
+        },
+        "id": {
+          "x-key": true,
+          "x-default-sql": "nextval('sensor_events_id_seq'::regclass)",
+          "x-nullable": false,
+          "type": "integer"
+        },
+        "sensor_udid": {
+          "x-nullable": false,
+          "type": "string",
+          "length": 40
+        },
+        "sensorevent1": {
+          "x-original-name": "sensorevent",
+          "type": "string",
+          "length": 40
+        }
+      }
+    },
+    "SensorEventCount": {
+      "x-table": "public.sensor_event_count",
+      "resource": "SensorEventCounts",
+      "required": [
+        "id"
+      ],
+      "properties": {
+        "Bridge": {
+          "type": "object",
+          "$ref": "#/definitions/Bridge"
+        },
+        "bridge_id": {
+          "type": "integer",
+          "x-foreignKey": {
+            "parentTable": "bridges",
+            "parentEntityType": "Bridge",
+            "type": "Bridge",
+            "principalKey": "id",
+            "name": "Bridge",
+            "textProperty": "name",
+            "navigationProperty": "SensorEventCounts"
+          }
+        },
+        "id": {
+          "x-key": true,
+          "x-identity": true,
+          "x-nullable": false,
+          "type": "integer"
+        },
+        "count": {
+          "type": "integer"
+        },
+        "Sensor": {
+          "type": "object",
+          "$ref": "#/definitions/Sensor"
+        },
+        "sensor_id": {
+          "type": "integer",
+          "x-foreignKey": {
+            "parentTable": "sensors",
+            "parentEntityType": "Sensor",
+            "type": "Sensor",
+            "principalKey": "id",
+            "name": "Sensor",
+            "textProperty": "udid",
+            "navigationProperty": "SensorEventCounts"
+          }
+        },
+        "event1": {
+          "x-original-name": "event",
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        }
+      }
+    },
+    "SensorStatus": {
+      "x-table": "public.sensor_status",
+      "resource": "SensorStatuses",
+      "required": [
+        "timestamp",
+        "sensor_udid"
+      ],
+      "properties": {
+        "timestamp": {
+          "x-nullable": false,
+          "type": "string",
+          "format": "date-time"
+        },
+        "Sensor": {
+          "type": "object",
+          "$ref": "#/definitions/Sensor"
+        },
+        "sensor_id": {
+          "type": "integer",
+          "x-foreignKey": {
+            "parentTable": "sensors",
+            "parentEntityType": "Sensor",
+            "type": "Sensor",
+            "principalKey": "id",
+            "name": "Sensor",
+            "textProperty": "udid",
+            "navigationProperty": "SensorStatuses"
+          }
+        },
+        "id": {
+          "x-key": true,
+          "x-default-sql": "nextval('sensor_status_id_seq'::regclass)",
+          "x-nullable": false,
+          "type": "integer"
+        },
+        "sensor_udid": {
+          "x-nullable": false,
+          "type": "string",
+          "length": 40
+        },
+        "status": {
+          "type": "string",
+          "length": 30
+        }
+      }
+    },
+    "SensorstatsLight": {
+      "x-table": "public.sensorstats_light",
+      "resource": "SensorstatsLights",
+      "required": [
+        "id"
+      ],
+      "properties": {
+        "off_count": {
+          "type": "integer"
+        },
+        "id": {
+          "x-key": true,
+          "x-identity": true,
+          "x-nullable": false,
+          "type": "integer"
+        },
+        "on_count": {
+          "type": "integer"
+        },
+        "Sensor": {
+          "type": "object",
+          "$ref": "#/definitions/Sensor"
+        },
+        "sensor_id": {
+          "type": "integer",
+          "x-foreignKey": {
+            "parentTable": "sensors",
+            "parentEntityType": "Sensor",
+            "type": "Sensor",
+            "principalKey": "id",
+            "name": "Sensor",
+            "textProperty": "udid",
+            "navigationProperty": "SensorstatsLights"
+          }
+        },
+        "on_percent": {
+          "type": "number",
+          "format": "float"
+        },
+        "total": {
+          "type": "integer"
+        }
+      }
+    },
+    "Test": {
+      "x-table": "public.test",
+      "resource": "Tests",
+      "required": [
+        "id"
+      ],
+      "properties": {
+        "id": {
+          "x-key": true,
+          "x-identity": true,
+          "x-nullable": false,
+          "type": "integer"
+        },
+        "value": {
+          "type": "integer"
+        },
+        "category": {
+          "type": "string"
+        }
+      }
+    },
+    "UdpMessage": {
+      "x-table": "public.udp_messages",
+      "resource": "UdpMessages",
+      "required": [],
+      "properties": {
+        "ts_receive": {
+          "type": "string",
+          "format": "date-time",
+          "x-key": true,
+          "x-virtual": true
+        },
+        "ts_message": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "light_on_threshold": {
+          "type": "integer"
+        },
+        "light_on_value": {
+          "type": "integer"
+        },
+        "battery_voltage": {
+          "type": "integer"
+        },
+        "persist": {
+          "type": "integer"
+        },
+        "gain": {
+          "type": "integer"
+        },
+        "timeout": {
+          "type": "integer"
+        },
+        "rsrp": {
+          "type": "integer"
+        },
+        "logid": {
+          "x-default-sql": "nextval('udp_logid_seq'::regclass)",
+          "x-nullable": false,
+          "type": "integer"
+        },
+        "imei": {
+          "type": "string"
+        },
+        "trigger": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        }
+      },
+      "x-view": true
+    },
+    "User": {
+      "x-table": "public.users",
+      "resource": "Users",
+      "required": [
+        "name",
+        "email",
+        "password",
+        "auth_token"
+      ],
+      "properties": {
+        "last_login": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "is_active": {
+          "x-default-sql": "false",
+          "x-nullable": false,
+          "type": "boolean"
+        },
+        "is_admin": {
+          "x-default-sql": "false",
+          "x-nullable": false,
+          "type": "boolean"
+        },
+        "id": {
+          "x-key": true,
+          "x-default-sql": "nextval('users_id_seq'::regclass)",
+          "x-nullable": false,
+          "type": "integer"
+        },
+        "name": {
+          "x-nullable": false,
+          "type": "string"
+        },
+        "email": {
+          "x-nullable": false,
+          "type": "string"
+        },
+        "password": {
+          "x-nullable": false,
+          "type": "string"
+        },
+        "phone_number": {
+          "type": "string"
+        },
+        "organisation": {
+          "type": "string"
+        },
+        "auth_token": {
+          "x-nullable": false,
+          "type": "string"
+        }
+      }
+    }
+  },
+  "paths": {
+    "/Bridges": {
+      "get": {
+        "operationId": "getBridges",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "$filter",
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "$orderby",
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "$expand",
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "$top",
+            "type": "integer"
+          },
+          {
+            "in": "query",
+            "name": "$skip",
+            "type": "integer"
+          },
+          {
+            "in": "query",
+            "name": "$format",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "schema": {
+              "properties": {
+                "value": {
+                  "items": {
+                    "$ref": "#/definitions/Bridge"
+                  },
+                  "type": "array"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "default": {
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "createBridge",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "Bridge",
+            "schema": {
+              "$ref": "#/definitions/Bridge"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "schema": {
+              "$ref": "#/definitions/Bridge"
+            }
+          },
+          "default": {
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/Bridgelogs": {
+      "get": {
+        "operationId": "getBridgelogs",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "$filter",
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "$orderby",
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "$expand",
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "$top",
+            "type": "integer"
+          },
+          {
+            "in": "query",
+            "name": "$skip",
+            "type": "integer"
+          },
+          {
+            "in": "query",
+            "name": "$format",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "schema": {
+              "properties": {
+                "value": {
+                  "items": {
+                    "$ref": "#/definitions/Bridgelog"
+                  },
+                  "type": "array"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "default": {
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "createBridgelog",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "Bridgelog",
+            "schema": {
+              "$ref": "#/definitions/Bridgelog"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "schema": {
+              "$ref": "#/definitions/Bridgelog"
+            }
+          },
+          "default": {
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/Bridgestats": {
+      "get": {
+        "operationId": "getBridgestats",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "$filter",
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "$orderby",
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "$expand",
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "$top",
+            "type": "integer"
+          },
+          {
+            "in": "query",
+            "name": "$skip",
+            "type": "integer"
+          },
+          {
+            "in": "query",
+            "name": "$format",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "schema": {
+              "properties": {
+                "value": {
+                  "items": {
+                    "$ref": "#/definitions/Bridgestat"
+                  },
+                  "type": "array"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "default": {
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "createBridgestat",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "Bridgestat",
+            "schema": {
+              "$ref": "#/definitions/Bridgestat"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "schema": {
+              "$ref": "#/definitions/Bridgestat"
+            }
+          },
+          "default": {
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/LastLuxEvents": {
+      "get": {
+        "operationId": "getLastLuxEvents",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "$filter",
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "$orderby",
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "$expand",
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "$top",
+            "type": "integer"
+          },
+          {
+            "in": "query",
+            "name": "$skip",
+            "type": "integer"
+          },
+          {
+            "in": "query",
+            "name": "$format",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "schema": {
+              "properties": {
+                "value": {
+                  "items": {
+                    "$ref": "#/definitions/LastLuxEvent"
+                  },
+                  "type": "array"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "default": {
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "createLastLuxEvent",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "LastLuxEvent",
+            "schema": {
+              "$ref": "#/definitions/LastLuxEvent"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "schema": {
+              "$ref": "#/definitions/LastLuxEvent"
+            }
+          },
+          "default": {
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/Sensors": {
+      "get": {
+        "operationId": "getSensors",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "$filter",
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "$orderby",
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "$expand",
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "$top",
+            "type": "integer"
+          },
+          {
+            "in": "query",
+            "name": "$skip",
+            "type": "integer"
+          },
+          {
+            "in": "query",
+            "name": "$format",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "schema": {
+              "properties": {
+                "value": {
+                  "items": {
+                    "$ref": "#/definitions/Sensor"
+                  },
+                  "type": "array"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "default": {
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "createSensor",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "Sensor",
+            "schema": {
+              "$ref": "#/definitions/Sensor"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "schema": {
+              "$ref": "#/definitions/Sensor"
+            }
+          },
+          "default": {
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/SensorEvents": {
+      "get": {
+        "operationId": "getSensorEvents",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "$filter",
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "$orderby",
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "$expand",
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "$top",
+            "type": "integer"
+          },
+          {
+            "in": "query",
+            "name": "$skip",
+            "type": "integer"
+          },
+          {
+            "in": "query",
+            "name": "$format",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "schema": {
+              "properties": {
+                "value": {
+                  "items": {
+                    "$ref": "#/definitions/SensorEvent"
+                  },
+                  "type": "array"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "default": {
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "createSensorEvent",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "SensorEvent",
+            "schema": {
+              "$ref": "#/definitions/SensorEvent"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "schema": {
+              "$ref": "#/definitions/SensorEvent"
+            }
+          },
+          "default": {
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/SensorEventCounts": {
+      "get": {
+        "operationId": "getSensorEventCounts",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "$filter",
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "$orderby",
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "$expand",
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "$top",
+            "type": "integer"
+          },
+          {
+            "in": "query",
+            "name": "$skip",
+            "type": "integer"
+          },
+          {
+            "in": "query",
+            "name": "$format",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "schema": {
+              "properties": {
+                "value": {
+                  "items": {
+                    "$ref": "#/definitions/SensorEventCount"
+                  },
+                  "type": "array"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "default": {
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "createSensorEventCount",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "SensorEventCount",
+            "schema": {
+              "$ref": "#/definitions/SensorEventCount"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "schema": {
+              "$ref": "#/definitions/SensorEventCount"
+            }
+          },
+          "default": {
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/SensorStatuses": {
+      "get": {
+        "operationId": "getSensorStatuses",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "$filter",
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "$orderby",
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "$expand",
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "$top",
+            "type": "integer"
+          },
+          {
+            "in": "query",
+            "name": "$skip",
+            "type": "integer"
+          },
+          {
+            "in": "query",
+            "name": "$format",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "schema": {
+              "properties": {
+                "value": {
+                  "items": {
+                    "$ref": "#/definitions/SensorStatus"
+                  },
+                  "type": "array"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "default": {
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "createSensorStatus",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "SensorStatus",
+            "schema": {
+              "$ref": "#/definitions/SensorStatus"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "schema": {
+              "$ref": "#/definitions/SensorStatus"
+            }
+          },
+          "default": {
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/SensorstatsLights": {
+      "get": {
+        "operationId": "getSensorstatsLights",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "$filter",
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "$orderby",
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "$expand",
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "$top",
+            "type": "integer"
+          },
+          {
+            "in": "query",
+            "name": "$skip",
+            "type": "integer"
+          },
+          {
+            "in": "query",
+            "name": "$format",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "schema": {
+              "properties": {
+                "value": {
+                  "items": {
+                    "$ref": "#/definitions/SensorstatsLight"
+                  },
+                  "type": "array"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "default": {
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "createSensorstatsLight",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "SensorstatsLight",
+            "schema": {
+              "$ref": "#/definitions/SensorstatsLight"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "schema": {
+              "$ref": "#/definitions/SensorstatsLight"
+            }
+          },
+          "default": {
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/Tests": {
+      "get": {
+        "operationId": "getTests",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "$filter",
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "$orderby",
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "$expand",
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "$top",
+            "type": "integer"
+          },
+          {
+            "in": "query",
+            "name": "$skip",
+            "type": "integer"
+          },
+          {
+            "in": "query",
+            "name": "$format",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "schema": {
+              "properties": {
+                "value": {
+                  "items": {
+                    "$ref": "#/definitions/Test"
+                  },
+                  "type": "array"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "default": {
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "createTest",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "Test",
+            "schema": {
+              "$ref": "#/definitions/Test"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "schema": {
+              "$ref": "#/definitions/Test"
+            }
+          },
+          "default": {
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/UdpMessages": {
+      "get": {
+        "operationId": "getUdpMessages",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "$filter",
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "$orderby",
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "$expand",
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "$top",
+            "type": "integer"
+          },
+          {
+            "in": "query",
+            "name": "$skip",
+            "type": "integer"
+          },
+          {
+            "in": "query",
+            "name": "$format",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "schema": {
+              "properties": {
+                "value": {
+                  "items": {
+                    "$ref": "#/definitions/UdpMessage"
+                  },
+                  "type": "array"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "default": {
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/Users": {
+      "get": {
+        "operationId": "getUsers",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "$filter",
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "$orderby",
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "$expand",
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "$top",
+            "type": "integer"
+          },
+          {
+            "in": "query",
+            "name": "$skip",
+            "type": "integer"
+          },
+          {
+            "in": "query",
+            "name": "$format",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "schema": {
+              "properties": {
+                "value": {
+                  "items": {
+                    "$ref": "#/definitions/User"
+                  },
+                  "type": "array"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "default": {
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "createUser",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "User",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          },
+          "default": {
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/Bridges({id})": {
+      "delete": {
+        "operationId": "deleteBridge",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "204": {},
+          "default": {
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "get": {
+        "operationId": "getBridgeByid",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "schema": {
+              "$ref": "#/definitions/Bridge"
+            }
+          },
+          "default": {
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "patch": {
+        "operationId": "updateBridge",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "type": "integer"
+          },
+          {
+            "in": "body",
+            "name": "Bridge",
+            "schema": {
+              "$ref": "#/definitions/Bridge"
+            }
+          }
+        ],
+        "responses": {
+          "204": {},
+          "default": {
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "cancel": {
+        "operationId": "cancelBridgeChanges",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "Bridge",
+            "schema": {
+              "$ref": "#/definitions/Bridge"
+            }
+          }
+        ],
+        "responses": {
+          "204": {},
+          "default": {
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/Bridgelogs({id})": {
+      "delete": {
+        "operationId": "deleteBridgelog",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "204": {},
+          "default": {
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "get": {
+        "operationId": "getBridgelogByid",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "schema": {
+              "$ref": "#/definitions/Bridgelog"
+            }
+          },
+          "default": {
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "patch": {
+        "operationId": "updateBridgelog",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "in": "body",
+            "name": "Bridgelog",
+            "schema": {
+              "$ref": "#/definitions/Bridgelog"
+            }
+          }
+        ],
+        "responses": {
+          "204": {},
+          "default": {
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "cancel": {
+        "operationId": "cancelBridgelogChanges",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "Bridgelog",
+            "schema": {
+              "$ref": "#/definitions/Bridgelog"
+            }
+          }
+        ],
+        "responses": {
+          "204": {},
+          "default": {
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/Bridgestats({id})": {
+      "delete": {
+        "operationId": "deleteBridgestat",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "204": {},
+          "default": {
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "get": {
+        "operationId": "getBridgestatByid",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "schema": {
+              "$ref": "#/definitions/Bridgestat"
+            }
+          },
+          "default": {
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "patch": {
+        "operationId": "updateBridgestat",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "type": "integer"
+          },
+          {
+            "in": "body",
+            "name": "Bridgestat",
+            "schema": {
+              "$ref": "#/definitions/Bridgestat"
+            }
+          }
+        ],
+        "responses": {
+          "204": {},
+          "default": {
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "cancel": {
+        "operationId": "cancelBridgestatChanges",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "Bridgestat",
+            "schema": {
+              "$ref": "#/definitions/Bridgestat"
+            }
+          }
+        ],
+        "responses": {
+          "204": {},
+          "default": {
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/LastLuxEvents({id})": {
+      "delete": {
+        "operationId": "deleteLastLuxEvent",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "204": {},
+          "default": {
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "get": {
+        "operationId": "getLastLuxEventByid",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "schema": {
+              "$ref": "#/definitions/LastLuxEvent"
+            }
+          },
+          "default": {
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "patch": {
+        "operationId": "updateLastLuxEvent",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "type": "integer"
+          },
+          {
+            "in": "body",
+            "name": "LastLuxEvent",
+            "schema": {
+              "$ref": "#/definitions/LastLuxEvent"
+            }
+          }
+        ],
+        "responses": {
+          "204": {},
+          "default": {
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "cancel": {
+        "operationId": "cancelLastLuxEventChanges",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "LastLuxEvent",
+            "schema": {
+              "$ref": "#/definitions/LastLuxEvent"
+            }
+          }
+        ],
+        "responses": {
+          "204": {},
+          "default": {
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/Sensors({id})": {
+      "delete": {
+        "operationId": "deleteSensor",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "204": {},
+          "default": {
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "get": {
+        "operationId": "getSensorByid",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "schema": {
+              "$ref": "#/definitions/Sensor"
+            }
+          },
+          "default": {
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "patch": {
+        "operationId": "updateSensor",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "type": "integer"
+          },
+          {
+            "in": "body",
+            "name": "Sensor",
+            "schema": {
+              "$ref": "#/definitions/Sensor"
+            }
+          }
+        ],
+        "responses": {
+          "204": {},
+          "default": {
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "cancel": {
+        "operationId": "cancelSensorChanges",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "Sensor",
+            "schema": {
+              "$ref": "#/definitions/Sensor"
+            }
+          }
+        ],
+        "responses": {
+          "204": {},
+          "default": {
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/SensorEvents({id})": {
+      "delete": {
+        "operationId": "deleteSensorEvent",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "204": {},
+          "default": {
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "get": {
+        "operationId": "getSensorEventByid",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "schema": {
+              "$ref": "#/definitions/SensorEvent"
+            }
+          },
+          "default": {
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "patch": {
+        "operationId": "updateSensorEvent",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "type": "integer"
+          },
+          {
+            "in": "body",
+            "name": "SensorEvent",
+            "schema": {
+              "$ref": "#/definitions/SensorEvent"
+            }
+          }
+        ],
+        "responses": {
+          "204": {},
+          "default": {
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "cancel": {
+        "operationId": "cancelSensorEventChanges",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "SensorEvent",
+            "schema": {
+              "$ref": "#/definitions/SensorEvent"
+            }
+          }
+        ],
+        "responses": {
+          "204": {},
+          "default": {
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/SensorEventCounts({id})": {
+      "delete": {
+        "operationId": "deleteSensorEventCount",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "204": {},
+          "default": {
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "get": {
+        "operationId": "getSensorEventCountByid",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "schema": {
+              "$ref": "#/definitions/SensorEventCount"
+            }
+          },
+          "default": {
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "patch": {
+        "operationId": "updateSensorEventCount",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "type": "integer"
+          },
+          {
+            "in": "body",
+            "name": "SensorEventCount",
+            "schema": {
+              "$ref": "#/definitions/SensorEventCount"
+            }
+          }
+        ],
+        "responses": {
+          "204": {},
+          "default": {
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "cancel": {
+        "operationId": "cancelSensorEventCountChanges",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "SensorEventCount",
+            "schema": {
+              "$ref": "#/definitions/SensorEventCount"
+            }
+          }
+        ],
+        "responses": {
+          "204": {},
+          "default": {
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/SensorStatuses({id})": {
+      "delete": {
+        "operationId": "deleteSensorStatus",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "204": {},
+          "default": {
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "get": {
+        "operationId": "getSensorStatusByid",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "schema": {
+              "$ref": "#/definitions/SensorStatus"
+            }
+          },
+          "default": {
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "patch": {
+        "operationId": "updateSensorStatus",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "type": "integer"
+          },
+          {
+            "in": "body",
+            "name": "SensorStatus",
+            "schema": {
+              "$ref": "#/definitions/SensorStatus"
+            }
+          }
+        ],
+        "responses": {
+          "204": {},
+          "default": {
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "cancel": {
+        "operationId": "cancelSensorStatusChanges",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "SensorStatus",
+            "schema": {
+              "$ref": "#/definitions/SensorStatus"
+            }
+          }
+        ],
+        "responses": {
+          "204": {},
+          "default": {
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/SensorstatsLights({id})": {
+      "delete": {
+        "operationId": "deleteSensorstatsLight",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "204": {},
+          "default": {
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "get": {
+        "operationId": "getSensorstatsLightByid",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "schema": {
+              "$ref": "#/definitions/SensorstatsLight"
+            }
+          },
+          "default": {
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "patch": {
+        "operationId": "updateSensorstatsLight",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "type": "integer"
+          },
+          {
+            "in": "body",
+            "name": "SensorstatsLight",
+            "schema": {
+              "$ref": "#/definitions/SensorstatsLight"
+            }
+          }
+        ],
+        "responses": {
+          "204": {},
+          "default": {
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "cancel": {
+        "operationId": "cancelSensorstatsLightChanges",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "SensorstatsLight",
+            "schema": {
+              "$ref": "#/definitions/SensorstatsLight"
+            }
+          }
+        ],
+        "responses": {
+          "204": {},
+          "default": {
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/Tests({id})": {
+      "delete": {
+        "operationId": "deleteTest",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "204": {},
+          "default": {
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "get": {
+        "operationId": "getTestByid",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "schema": {
+              "$ref": "#/definitions/Test"
+            }
+          },
+          "default": {
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "patch": {
+        "operationId": "updateTest",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "type": "integer"
+          },
+          {
+            "in": "body",
+            "name": "Test",
+            "schema": {
+              "$ref": "#/definitions/Test"
+            }
+          }
+        ],
+        "responses": {
+          "204": {},
+          "default": {
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "cancel": {
+        "operationId": "cancelTestChanges",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "Test",
+            "schema": {
+              "$ref": "#/definitions/Test"
+            }
+          }
+        ],
+        "responses": {
+          "204": {},
+          "default": {
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/Users({id})": {
+      "delete": {
+        "operationId": "deleteUser",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "204": {},
+          "default": {
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "get": {
+        "operationId": "getUserByid",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          },
+          "default": {
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "patch": {
+        "operationId": "updateUser",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "type": "integer"
+          },
+          {
+            "in": "body",
+            "name": "User",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        ],
+        "responses": {
+          "204": {},
+          "default": {
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "cancel": {
+        "operationId": "cancelUserChanges",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "User",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        ],
+        "responses": {
+          "204": {},
+          "default": {
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    }
+  },
+  "basePath": "/odata/BridgesenseData",
+  "host": "localhost:5000",
+  "schemes": [
+    "http"
+  ]
+}

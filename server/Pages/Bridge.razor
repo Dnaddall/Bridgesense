@@ -1,0 +1,94 @@
+﻿@page "/"
+@page "/bridge"
+@layout MainLayout
+@inherits Bridgesense.Pages.BridgeComponent
+
+@using Radzen
+@using Radzen.Blazor
+@using Bridgesense.Models.BridgesenseData
+<PageTitle>Bridge</PageTitle>
+<RadzenContent Container="main">
+  <ChildContent>
+    <RadzenHeading Size="H1" Text="Bridge">
+    </RadzenHeading>
+    <div class="row">
+      <div class="col-md-12">
+        <RadzenDataGrid @ref="grid0" AllowFiltering="true" AllowPaging="true" AllowSorting="true" Data="@getBridgesResult" FilterMode="Radzen.FilterMode.Advanced" TItem="Bridgesense.Models.BridgesenseData.Bridge" Render="@Grid0Render" RowSelect="@Grid0RowSelect">
+          <Columns>
+            <RadzenDataGridColumn TItem="Bridgesense.Models.BridgesenseData.Bridge" Property="latitude" Title="Latitude">
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="Bridgesense.Models.BridgesenseData.Bridge" Property="longitude" Title="Longitude">
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="Bridgesense.Models.BridgesenseData.Bridge" FormatString="{0:d}" Property="created_at" Title="Created At">
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="Bridgesense.Models.BridgesenseData.Bridge" FormatString="{0:d}" Property="updated_at" Title="Updated At">
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="Bridgesense.Models.BridgesenseData.Bridge" Property="id" Title="Id">
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="Bridgesense.Models.BridgesenseData.Bridge" Property="name" Title="Name">
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="Bridgesense.Models.BridgesenseData.Bridge" Property="vild_code" Title="Vild Code">
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="Bridgesense.Models.BridgesenseData.Bridge" Property="owner" Title="Owner">
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="Bridgesense.Models.BridgesenseData.Bridge" Property="manager" Title="Manager">
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="Bridgesense.Models.BridgesenseData.Bridge" Property="isrs" Title="Isrs">
+            </RadzenDataGridColumn>
+          </Columns>
+        </RadzenDataGrid>
+        <RadzenHeading Size="H1" Text="Sensors">
+        </RadzenHeading>
+        <RadzenDataGrid @ref="grid1" AllowFiltering="true" AllowPaging="true" AllowSorting="true" Data="@Sensors" FilterMode="Radzen.FilterMode.Advanced" TItem="Bridgesense.Models.BridgesenseData.Sensor" Render="@Grid1Render" RowSelect="@Grid1RowSelect">
+          <Columns>
+            <RadzenDataGridColumn TItem="Bridgesense.Models.BridgesenseData.Sensor" FilterProperty="Bridge.name" GroupProperty="Bridge.name" Property="bridge_id" SortProperty="Bridge.name" Title="Bridge">
+              <Template Context="data">
+              @(data.Bridge?.name)
+              </Template>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="Bridgesense.Models.BridgesenseData.Sensor" FormatString="{0:d}" Property="created_at" Title="Created At">
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="Bridgesense.Models.BridgesenseData.Sensor" FormatString="{0:d}" Property="updated_at" Title="Updated At">
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="Bridgesense.Models.BridgesenseData.Sensor" Property="id" Title="Id">
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="Bridgesense.Models.BridgesenseData.Sensor" Property="udid" Title="Udid">
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="Bridgesense.Models.BridgesenseData.Sensor" Property="sensortype" Title="Sensortype">
+            </RadzenDataGridColumn>
+          </Columns>
+        </RadzenDataGrid>
+        <RadzenHeading Size="H1" Text="Stats">
+        </RadzenHeading>
+        <RadzenChart ColorScheme="ColorScheme.Pastel" style="width: 301px">
+          <ChildContent>
+            <RadzenPieSeries CategoryProperty="event1" Data="@SensorEventCounts" ValueProperty="count">
+            </RadzenPieSeries>
+          </ChildContent>
+        </RadzenChart>
+        <RadzenDataGrid @ref="grid2" AllowFiltering="true" AllowPaging="true" AllowSorting="true" Data="@SensorEventCounts" FilterMode="Radzen.FilterMode.Advanced" TItem="Bridgesense.Models.BridgesenseData.SensorEventCount">
+          <Columns>
+            <RadzenDataGridColumn TItem="Bridgesense.Models.BridgesenseData.SensorEventCount" FilterProperty="Bridge.name" GroupProperty="Bridge.name" Property="bridge_id" SortProperty="Bridge.name" Title="Bridge">
+              <Template Context="data">
+              @(data.Bridge?.name)
+              </Template>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="Bridgesense.Models.BridgesenseData.SensorEventCount" Property="id" Title="Id">
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="Bridgesense.Models.BridgesenseData.SensorEventCount" Property="count" Title="Count">
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="Bridgesense.Models.BridgesenseData.SensorEventCount" FilterProperty="Sensor.id" GroupProperty="Sensor.id" Property="sensor_id" SortProperty="Sensor.id" Title="Sensor">
+              <Template Context="data">
+              @(data.Sensor?.id)
+              </Template>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="Bridgesense.Models.BridgesenseData.SensorEventCount" Property="event1" Title="Event">
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="Bridgesense.Models.BridgesenseData.SensorEventCount" Property="type" Title="Type">
+            </RadzenDataGridColumn>
+          </Columns>
+        </RadzenDataGrid>
+      </div>
+    </div>
+  </ChildContent>
+</RadzenContent>

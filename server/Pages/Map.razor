@@ -1,0 +1,20 @@
+﻿@page "/map"
+@layout MainLayout
+@inherits Bridgesense.Pages.MapComponent
+
+@using Radzen
+@using Radzen.Blazor
+@using Bridgesense.Models.BridgesenseData
+<PageTitle>Map</PageTitle>
+<RadzenContent Container="main">
+  <ChildContent>
+    <RadzenHeading Size="H1" Text="Map">
+    </RadzenHeading>
+    <RadzenGoogleMap Center="@(new GoogleMapPosition() { Lat = 52.328837559821395, Lng = 4.958855554433512 })" style="height: 479px" Zoom="12">
+      <Markers>
+        <RadzenGoogleMapMarker Label="BRIDGE 1" Position="@(new GoogleMapPosition() { Lat = 52.074249, Lng = 4.660201 })" Title="Bridge 1">
+        </RadzenGoogleMapMarker>
+      </Markers>
+    </RadzenGoogleMap>
+  </ChildContent>
+</RadzenContent>

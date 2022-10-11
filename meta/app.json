@@ -1,0 +1,28 @@
+{
+  "dataSources": [
+    "bridgesense_data"
+  ],
+  "generator": "@radzen/blazor-server",
+  "https": false,
+  "layouts": [
+    "Login",
+    "Main"
+  ],
+  "logo": "",
+  "name": "bridgesense",
+  "navigation": [
+    "Bridge",
+    "Sensor",
+    "Map"
+  ],
+  "pages": [
+    "Bridge",
+    "Sensor",
+    "Map"
+  ],
+  "serverLang": "cs",
+  "serverProject": true,
+  "serverVersion": "6",
+  "startPage": "Bridge",
+  "theme": "standard"
+}

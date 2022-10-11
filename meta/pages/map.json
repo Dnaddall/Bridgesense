@@ -1,0 +1,58 @@
+{
+  "access": "Everybody",
+  "components": [
+    {
+      "components": [
+        {
+          "name": "pageTitle",
+          "size": "H1",
+          "text": "Map",
+          "type": "heading"
+        },
+        {
+          "center": {
+            "lat": 52.328837559821395,
+            "lng": 4.958855554433512
+          },
+          "data": "${getBridgeResults}",
+          "markers": [
+            {
+              "label": "BRIDGE 1",
+              "position": {
+                "lat": 52.074249,
+                "lng": 4.660201
+              },
+              "title": "Bridge 1"
+            }
+          ],
+          "name": "googlemap0",
+          "style": {
+            "height": "479px"
+          },
+          "type": "googlemap",
+          "zoom": 12
+        }
+      ],
+      "container": "main",
+      "type": "content"
+    }
+  ],
+  "events": {
+    "load": [
+      {
+        "name": "bridgesense_data.getBridges",
+        "then": [
+          {
+            "name": "getBridgeResults",
+            "type": "set",
+            "value": "${result}",
+            "valueType": "IEnumerable<Bridgesense.Models.BridgesenseData.Bridge>"
+          }
+        ],
+        "type": "invoke"
+      }
+    ]
+  },
+  "layout": "Main",
+  "name": "Map"
+}

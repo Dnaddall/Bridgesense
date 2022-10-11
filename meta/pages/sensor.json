@@ -1,0 +1,212 @@
+{
+  "components": [
+    {
+      "components": [
+        {
+          "name": "pageTitle",
+          "size": "H1",
+          "text": "Sensor",
+          "type": "heading"
+        },
+        {
+          "components": [
+            {
+              "class": "col-md-12",
+              "components": [
+                {
+                  "allowFiltering": true,
+                  "allowPaging": true,
+                  "allowSorting": true,
+                  "columns": [
+                    {
+                      "filterProperty": "Bridge.name",
+                      "groupProperty": "Bridge.name",
+                      "property": "bridge_id",
+                      "sortProperty": "Bridge.name",
+                      "template": "${data.Bridge?.name}",
+                      "title": "Bridge"
+                    },
+                    {
+                      "formatString": "{0:d}",
+                      "property": "created_at",
+                      "title": "Created At"
+                    },
+                    {
+                      "formatString": "{0:d}",
+                      "property": "updated_at",
+                      "title": "Updated At"
+                    },
+                    {
+                      "property": "id",
+                      "title": "Id"
+                    },
+                    {
+                      "property": "udid",
+                      "title": "Udid"
+                    },
+                    {
+                      "property": "sensortype",
+                      "title": "Sensortype"
+                    }
+                  ],
+                  "data": "${getSensorsResult}",
+                  "events": {
+                    "loadData": [],
+                    "rowSelect": [
+                      {
+                        "name": "master",
+                        "type": "set",
+                        "value": "${event}",
+                        "valueType": "Bridgesense.Models.BridgesenseData.Sensor"
+                      },
+                      {
+                        "condition": "${event} == null",
+                        "name": "SensorEventCounts",
+                        "type": "set",
+                        "value": "null",
+                        "valueType": "IEnumerable<Bridgesense.Models.BridgesenseData.SensorEventCount>"
+                      },
+                      {
+                        "condition": "${event} != null",
+                        "name": "bridgesense_data.getSensorEventCounts",
+                        "parameters": [
+                          {
+                            "name": "$filter",
+                            "value": "i => i.sensor_id == ${event.id}"
+                          }
+                        ],
+                        "then": [
+                          {
+                            "name": "SensorEventCounts",
+                            "type": "set",
+                            "value": "${result}",
+                            "valueType": "IEnumerable<Bridgesense.Models.BridgesenseData.SensorEventCount>"
+                          }
+                        ],
+                        "type": "invoke"
+                      }
+                    ]
+                  },
+                  "filterMode": "advanced",
+                  "itemType": "Bridgesense.Models.BridgesenseData.Sensor",
+                  "name": "grid0",
+                  "title": "",
+                  "type": "datagrid"
+                },
+                {
+                  "name": "heading1",
+                  "size": "H1",
+                  "text": "SensorEventCounts",
+                  "type": "heading"
+                },
+                {
+                  "colorScheme": "ColorScheme.Pastel",
+                  "name": "chart0",
+                  "series": [
+                    {
+                      "categoryProperty": "event1",
+                      "data": "${SensorEventCounts}",
+                      "type": "Pie",
+                      "valueProperty": "count"
+                    }
+                  ],
+                  "style": {
+                    "width": "302px"
+                  },
+                  "type": "chart",
+                  "visible": true
+                },
+                {
+                  "allowFiltering": true,
+                  "allowPaging": true,
+                  "allowSorting": true,
+                  "columns": [
+                    {
+                      "filterProperty": "Bridge.name",
+                      "groupProperty": "Bridge.name",
+                      "property": "bridge_id",
+                      "sortProperty": "Bridge.name",
+                      "template": "${data.Bridge?.name}",
+                      "title": "Bridge"
+                    },
+                    {
+                      "property": "id",
+                      "title": "Id"
+                    },
+                    {
+                      "property": "count",
+                      "title": "Count"
+                    },
+                    {
+                      "filterProperty": "Sensor.udid",
+                      "groupProperty": "Sensor.udid",
+                      "property": "sensor_id",
+                      "sortProperty": "Sensor.udid",
+                      "template": "${data.Sensor?.udid}",
+                      "title": "Sensor"
+                    },
+                    {
+                      "property": "event1",
+                      "title": "Event"
+                    },
+                    {
+                      "property": "type",
+                      "title": "Type"
+                    }
+                  ],
+                  "data": "${SensorEventCounts}",
+                  "events": {},
+                  "filterMode": "advanced",
+                  "itemType": "Bridgesense.Models.BridgesenseData.SensorEventCount",
+                  "name": "grid1",
+                  "type": "datagrid"
+                }
+              ],
+              "type": "col"
+            }
+          ],
+          "type": "row"
+        }
+      ],
+      "container": "main",
+      "type": "content"
+    }
+  ],
+  "events": {
+    "load": [
+      {
+        "name": "bridgesense_data.getSensors",
+        "parameters": [],
+        "then": [
+          {
+            "name": "getSensorsResult",
+            "type": "set",
+            "value": "${result}",
+            "valueType": "IEnumerable<Bridgesense.Models.BridgesenseData.Sensor>"
+          }
+        ],
+        "type": "invoke"
+      },
+      {
+        "name": "bridgesense_data.getSensorEventCounts",
+        "parameters": [
+          {
+            "name": "$expand",
+            "value": "Bridge,Sensor"
+          }
+        ],
+        "then": [
+          {
+            "name": "getSensorEventCountsResult",
+            "type": "set",
+            "value": "${result}",
+            "valueType": "IEnumerable<Bridgesense.Models.BridgesenseData.SensorEventCount>"
+          }
+        ],
+        "type": "invoke"
+      }
+    ]
+  },
+  "layout": "Main",
+  "name": "Sensor"
+}
