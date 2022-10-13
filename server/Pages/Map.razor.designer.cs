@@ -10,12 +10,20 @@ using Radzen.Blazor;
 using Bridgesense.Models.BridgesenseData;
 using Microsoft.EntityFrameworkCore;
 
+
 namespace Bridgesense.Pages
 {
     public partial class MapComponent : ComponentBase
     {
+        
+      
+   
+
+
+
         [Parameter(CaptureUnmatchedValues = true)]
         public IReadOnlyDictionary<string, dynamic> Attributes { get; set; }
+        
 
         public void Reload()
         {
@@ -46,6 +54,8 @@ namespace Bridgesense.Pages
 
         [Inject]
         protected BridgesenseDataService BridgesenseData { get; set; }
+        [Inject]
+        Data.BridgesenseDataContext BridgesenseDataContext { get; set; }
 
         IEnumerable<Bridgesense.Models.BridgesenseData.Bridge> _getBridgeResults;
         protected IEnumerable<Bridgesense.Models.BridgesenseData.Bridge> getBridgeResults
@@ -76,4 +86,5 @@ namespace Bridgesense.Pages
             getBridgeResults = bridgesenseDataGetBridgesResult;
         }
     }
+
 }

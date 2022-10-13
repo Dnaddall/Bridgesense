@@ -13,12 +13,14 @@
   "navigation": [
     "Bridge",
     "Sensor",
-    "Map"
+    "Map",
+    "Copy of Bridge"
   ],
   "pages": [
     "Bridge",
     "Sensor",
-    "Map"
+    "Map",
+    "Copy of Bridge"
   ],
   "serverLang": "cs",
   "serverProject": true,
