@@ -117,7 +117,7 @@ namespace Bridgesense.Pages
             {
                 if (!object.Equals(sensor_master, value))
                 {
-                    var args = new PropertyChangedEventArgs() { Name = "sensor_mater", NewValue = value, OldValue = sensor_master };
+                    var args = new PropertyChangedEventArgs() { Name = "sensor_master", NewValue = value, OldValue = sensor_master };
                     sensor_master = value;
                     OnPropertyChanged(args);
                     Reload();

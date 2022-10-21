@@ -5,55 +5,43 @@ using System.Threading.Tasks;
 using Radzen;
 using Radzen.Blazor;
 using System.Transactions;
+using Bridgesense.Data;
 
 namespace Bridgesense.Pages
 {
     public partial class MapComponent
     {
-       public double a = new Maplatitude();
-       public  double b = new Maplongitude();
-
-        public class Maplatitude
+        BridgesenseDataContext Context
         {
-            public double? latitude { get; set; }
-
-            public static implicit operator double(Maplatitude v)
+            get
             {
-                throw new NotImplementedException();
+                return this.context;
             }
         }
-        public class Maplongitude
-        {
-            public double? longitude { get; set; }
+        private readonly BridgesenseDataContext context;
 
-            public static implicit operator double(Maplongitude v)
+        public System.Collections.Generic.List<double?> GetLatitude(Models.BridgesenseData.Bridge bridge)
+        {
+
+            System.Collections.Generic.List<double?> latitudes = Context.Bridges
+                               .Where(i => i.id == bridge.id)
+                               .Select(i => i.latitude)
+                               .ToList();
+            foreach (double? latitude in latitudes)
             {
-                throw new NotImplementedException();
+
             }
+            return latitudes;
         }
 
-        public IEnumerable<Maplatitude> GetMaplatitude()
+        public System.Collections.Generic.List<double?> GetLongitude(Models.BridgesenseData.Bridge bridge)
         {
-            var Coords = BridgesenseDataContext.Bridges
-                         .Select(s => new Maplatitude()
-                         {
-                             latitude = s.latitude
-                         });
 
-
-            return Coords;
-        }
-
-        public IEnumerable<Maplongitude> GetMaplongitude()
-        {
-            var Coords = BridgesenseDataContext.Bridges
-                         .Select(s => new Maplongitude()
-                         {
-                             longitude = s.longitude
-                         });
-
-
-            return Coords;
+            System.Collections.Generic.List<double?> longitudes = Context.Bridges
+                               .Where(i => i.id == bridge.id)
+                               .Select(i => i.longitude)
+                               .ToList();
+            return longitudes;
         }
 
     }
