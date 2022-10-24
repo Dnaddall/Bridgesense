@@ -8,12 +8,12 @@ namespace Bridgesense.Models.BridgesenseData
     [Table("bridges", Schema = "public")]
     public partial class Bridge
     {
-        public double? latitude
+        public double latitude
         {
             get;
             set;
         }
-        public double? longitude
+        public double longitude
         {
             get;
             set;

@@ -49,6 +49,8 @@ namespace Bridgesense.Pages
         protected RadzenDataGrid<Bridgesense.Models.BridgesenseData.Bridge> grid0;
         protected RadzenDataGrid<Bridgesense.Models.BridgesenseData.Sensor> grid1;
         protected RadzenDataGrid<Bridgesense.Models.BridgesenseData.SensorEventCount> grid2;
+        protected RadzenDataGrid<Bridgesense.Models.BridgesenseData.Bridgestat> grid3;
+
 
         IEnumerable<Bridgesense.Models.BridgesenseData.Bridge> _getBridgesResult;
         protected IEnumerable<Bridgesense.Models.BridgesenseData.Bridge> getBridgesResult
@@ -61,8 +63,27 @@ namespace Bridgesense.Pages
             {
                 if (!object.Equals(_getBridgesResult, value))
                 {
-                    var args = new PropertyChangedEventArgs(){ Name = "getBridgesResult", NewValue = value, OldValue = _getBridgesResult };
+                    var args = new PropertyChangedEventArgs() { Name = "getBridgesResult", NewValue = value, OldValue = _getBridgesResult };
                     _getBridgesResult = value;
+                    OnPropertyChanged(args);
+                    Reload();
+                }
+            }
+        }
+
+        IEnumerable<Bridgesense.Models.BridgesenseData.Bridgestat> _getBridgestatsResult;
+        protected IEnumerable<Bridgesense.Models.BridgesenseData.Bridgestat> getBridgestatsResult
+        {
+            get
+            {
+                return _getBridgestatsResult;
+            }
+            set
+            {
+                if (!object.Equals(_getBridgestatsResult, value))
+                {
+                    var args = new PropertyChangedEventArgs() { Name = "getBridgestatsResult", NewValue = value, OldValue = _getBridgestatsResult };
+                    _getBridgestatsResult = value;
                     OnPropertyChanged(args);
                     Reload();
                 }
@@ -80,7 +101,7 @@ namespace Bridgesense.Pages
             {
                 if (!object.Equals(_getSensorEventCountsResult, value))
                 {
-                    var args = new PropertyChangedEventArgs(){ Name = "getSensorEventCountsResult", NewValue = value, OldValue = _getSensorEventCountsResult };
+                    var args = new PropertyChangedEventArgs() { Name = "getSensorEventCountsResult", NewValue = value, OldValue = _getSensorEventCountsResult };
                     _getSensorEventCountsResult = value;
                     OnPropertyChanged(args);
                     Reload();
@@ -99,7 +120,7 @@ namespace Bridgesense.Pages
             {
                 if (!object.Equals(_master, value))
                 {
-                    var args = new PropertyChangedEventArgs(){ Name = "master", NewValue = value, OldValue = _master };
+                    var args = new PropertyChangedEventArgs() { Name = "master", NewValue = value, OldValue = _master };
                     _master = value;
                     OnPropertyChanged(args);
                     Reload();
@@ -136,7 +157,7 @@ namespace Bridgesense.Pages
             {
                 if (!object.Equals(_lastFilter, value))
                 {
-                    var args = new PropertyChangedEventArgs(){ Name = "lastFilter", NewValue = value, OldValue = _lastFilter };
+                    var args = new PropertyChangedEventArgs() { Name = "lastFilter", NewValue = value, OldValue = _lastFilter };
                     _lastFilter = value;
                     OnPropertyChanged(args);
                     Reload();
@@ -155,7 +176,7 @@ namespace Bridgesense.Pages
             {
                 if (!object.Equals(_Sensors, value))
                 {
-                    var args = new PropertyChangedEventArgs(){ Name = "Sensors", NewValue = value, OldValue = _Sensors };
+                    var args = new PropertyChangedEventArgs() { Name = "Sensors", NewValue = value, OldValue = _Sensors };
                     _Sensors = value;
                     OnPropertyChanged(args);
                     Reload();
@@ -174,13 +195,33 @@ namespace Bridgesense.Pages
             {
                 if (!object.Equals(_SensorEventCounts, value))
                 {
-                    var args = new PropertyChangedEventArgs(){ Name = "SensorEventCounts", NewValue = value, OldValue = _SensorEventCounts };
+                    var args = new PropertyChangedEventArgs() { Name = "SensorEventCounts", NewValue = value, OldValue = _SensorEventCounts };
                     _SensorEventCounts = value;
                     OnPropertyChanged(args);
                     Reload();
                 }
             }
         }
+
+        IEnumerable<Bridgesense.Models.BridgesenseData.Bridgestat> _Bridgestats;
+        protected IEnumerable<Bridgesense.Models.BridgesenseData.Bridgestat> Bridgestats
+        {
+            get
+            {
+                return _Bridgestats;
+            }
+            set
+            {
+                if (!object.Equals(_Bridgestats, value))
+                {
+                    var args = new PropertyChangedEventArgs() { Name = "Bridgestats", NewValue = value, OldValue = _Bridgestats };
+                    _Bridgestats = value;
+                    OnPropertyChanged(args);
+                    Reload();
+                }
+            }
+        }
+
 
         protected override async System.Threading.Tasks.Task OnInitializedAsync()
         {
@@ -191,14 +232,19 @@ namespace Bridgesense.Pages
             var bridgesenseDataGetBridgesResult = await BridgesenseData.GetBridges();
             getBridgesResult = bridgesenseDataGetBridgesResult;
 
+            var bridgesenseDataGetBridgestats = await BridgesenseData.GetBridgestats(new Query() { Expand = "Sensor,Bridge" });
+            getBridgestatsResult = bridgesenseDataGetBridgestats;
+
             var bridgesenseDataGetSensorEventCountsResult = await BridgesenseData.GetSensorEventCounts(new Query() { Expand = "Sensor,Bridge" });
             getSensorEventCountsResult = bridgesenseDataGetSensorEventCountsResult;
+
         }
-        
+
 
         protected async void Grid0Render(DataGridRenderEventArgs<Bridgesense.Models.BridgesenseData.Bridge> args)
         {
-            if (grid0.Query.Filter != lastFilter) {
+            if (grid0.Query.Filter != lastFilter)
+            {
                 master = grid0.View.FirstOrDefault();
             }
 
@@ -238,6 +284,8 @@ namespace Bridgesense.Pages
             {
                 var bridgesenseDataGetSensorsResult = await BridgesenseData.GetSensors(new Query() { Filter = $@"i => i.bridge_id == {args.id}" });
                 Sensors = bridgesenseDataGetSensorsResult;
+                var bridgesenseDataGetBridgestatsResult = await BridgesenseData.GetBridgestats(new Query() { Filter = $@"i => i.bridge_id == {args.id}" });
+                Bridgestats = bridgesenseDataGetBridgestatsResult;
             }
         }
         protected async System.Threading.Tasks.Task Grid1RowSelect(Bridgesense.Models.BridgesenseData.Sensor args)
@@ -255,6 +303,7 @@ namespace Bridgesense.Pages
                 SensorEventCounts = bridgesenseDataGetSensorEventCountsResult;
             }
         }
+        
 
     }
 }

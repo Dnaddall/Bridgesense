@@ -23,7 +23,7 @@ namespace Bridgesense.Pages
 
         [Parameter(CaptureUnmatchedValues = true)]
         public IReadOnlyDictionary<string, dynamic> Attributes { get; set; }
-        
+
 
         public void Reload()
         {
@@ -54,11 +54,10 @@ namespace Bridgesense.Pages
 
         [Inject]
         protected BridgesenseDataService BridgesenseData { get; set; }
-        [Inject]
-        Data.BridgesenseDataContext BridgesenseDataContext { get; set; }
-
-        public RenderFragment Markers { get; set; }
+        
         public IEnumerable<RadzenGoogleMapMarker> mapMarkers  { get; set; }
+
+       
 
         IEnumerable<Bridgesense.Models.BridgesenseData.Bridge> _getBridgeResults;
         protected IEnumerable<Bridgesense.Models.BridgesenseData.Bridge> getBridgeResults
@@ -85,8 +84,8 @@ namespace Bridgesense.Pages
         }
         protected async System.Threading.Tasks.Task Load()
         {
-            var bridgesenseDataGetPos = await BridgesenseData.GetBridges(new Query() { Select = "Latitude,Longitude" });
-            mapMarkers = (IEnumerable<RadzenGoogleMapMarker>)bridgesenseDataGetPos;
+            var bridgesenseDataGetBridgesResult = await BridgesenseData.GetBridges();
+            getBridgeResults = bridgesenseDataGetBridgesResult;
         }
 
         protected IEnumerable<RadzenGoogleMapMarker> markers
@@ -108,5 +107,6 @@ namespace Bridgesense.Pages
         }
 
     }
+
 
 }

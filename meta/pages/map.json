@@ -14,7 +14,7 @@
             "lat": 52.328837559821395,
             "lng": 4.958855554433512
           },
-          "data": "${getBridgeResults}",
+          "data": "${Markers}",
           "markers": [
             {
               "label": "BRIDGE 1",
