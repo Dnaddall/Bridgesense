@@ -15,11 +15,6 @@ namespace Bridgesense.Pages
 {
     public partial class MapComponent : ComponentBase
     {
-        
-      
-   
-
-
 
         [Parameter(CaptureUnmatchedValues = true)]
         public IReadOnlyDictionary<string, dynamic> Attributes { get; set; }
@@ -57,7 +52,9 @@ namespace Bridgesense.Pages
         
         public IEnumerable<RadzenGoogleMapMarker> mapMarkers  { get; set; }
 
-       
+
+
+
 
         IEnumerable<Bridgesense.Models.BridgesenseData.Bridge> _getBridgeResults;
         protected IEnumerable<Bridgesense.Models.BridgesenseData.Bridge> getBridgeResults
@@ -86,6 +83,7 @@ namespace Bridgesense.Pages
         {
             var bridgesenseDataGetBridgesResult = await BridgesenseData.GetBridges();
             getBridgeResults = bridgesenseDataGetBridgesResult;
+
         }
 
         protected IEnumerable<RadzenGoogleMapMarker> markers
