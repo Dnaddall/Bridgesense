@@ -11,7 +11,7 @@ using System.Reflection.Metadata.Ecma335;
 namespace Bridgesense.Pages
 {
     public partial class MapComponent
-    {
+    { 
     }
 
 }

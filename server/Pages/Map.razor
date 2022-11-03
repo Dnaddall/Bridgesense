@@ -10,7 +10,7 @@
   <ChildContent>
     <RadzenHeading Size="H1" Text="Map">
     </RadzenHeading>
-    <RadzenGoogleMap Center="@(new GoogleMapPosition() { Lat = 52.328837559821395, Lng = 4.958855554433512 })" style="height: 479px" Zoom="12">
+    <RadzenGoogleMap Center="@(new GoogleMapPosition() { Lat = 52.328837559821395, Lng = 4.958855554433512 })" MarkerClick=@OnMarkerClick style="height: 479px" Zoom="12">
       <Markers>
         @foreach (var item in getBridgeResults)
         {
@@ -18,6 +18,7 @@
                     <RadzenGoogleMapMarker Label=@item.name Position=@position Title=@item.name>
                     </RadzenGoogleMapMarker>
         }
+
       </Markers>
     </RadzenGoogleMap>
   </ChildContent>

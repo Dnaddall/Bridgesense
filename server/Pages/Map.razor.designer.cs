@@ -9,7 +9,7 @@ using Radzen;
 using Radzen.Blazor;
 using Bridgesense.Models.BridgesenseData;
 using Microsoft.EntityFrameworkCore;
-
+using DocumentFormat.OpenXml.Bibliography;
 
 namespace Bridgesense.Pages
 {
@@ -49,8 +49,8 @@ namespace Bridgesense.Pages
 
         [Inject]
         protected BridgesenseDataService BridgesenseData { get; set; }
-        
-        public IEnumerable<RadzenGoogleMapMarker> mapMarkers  { get; set; }
+
+        public EventCallback<RadzenGoogleMapMarker> MarkerClick { get; set; }
 
 
 
@@ -67,7 +67,7 @@ namespace Bridgesense.Pages
             {
                 if (!object.Equals(_getBridgeResults, value))
                 {
-                    var args = new PropertyChangedEventArgs(){ Name = "getBridgeResults", NewValue = value, OldValue = _getBridgeResults };
+                    var args = new PropertyChangedEventArgs() { Name = "getBridgeResults", NewValue = value, OldValue = _getBridgeResults };
                     _getBridgeResults = value;
                     OnPropertyChanged(args);
                     Reload();
@@ -86,25 +86,17 @@ namespace Bridgesense.Pages
 
         }
 
-        protected IEnumerable<RadzenGoogleMapMarker> markers
+        public void OnMarkerClick(RadzenGoogleMapMarker marker)
         {
-            get 
-            {
-                return mapMarkers;
-            }
-            set 
-            {
-                if (!object.Equals(mapMarkers, value))
-                {
-                    var args = new PropertyChangedEventArgs() { Name = "getBridgeResults", NewValue = value, OldValue = mapMarkers };
-                    mapMarkers = value;
-                    OnPropertyChanged(args);
-                    Reload();
-                }
-            }
+
+            Console.WriteLine($"Map {marker.Title} marker clicked. Marker position -> Lat: {marker.Position.Lat}, Lng: {marker.Position.Lng}");
+
         }
 
+
+    
     }
-
-
 }
+
+
+
