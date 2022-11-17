@@ -9,11 +9,14 @@ using Radzen;
 using Radzen.Blazor;
 using Bridgesense.Models.BridgesenseData;
 using Microsoft.EntityFrameworkCore;
+using System.Diagnostics.Eventing.Reader;
 
 namespace Bridgesense.Pages
 {
     public partial class BridgeComponent : ComponentBase
     {
+
+
         [Parameter(CaptureUnmatchedValues = true)]
         public IReadOnlyDictionary<string, dynamic> Attributes { get; set; }
 
@@ -50,6 +53,29 @@ namespace Bridgesense.Pages
         protected RadzenDataGrid<Bridgesense.Models.BridgesenseData.Sensor> grid1;
         protected RadzenDataGrid<Bridgesense.Models.BridgesenseData.SensorEventCount> grid2;
         protected RadzenDataGrid<Bridgesense.Models.BridgesenseData.Bridgestat> grid3;
+        protected RadzenDataGrid<Bridgesense.Models.BridgesenseData.Bridgelog> grid4;
+
+        IEnumerable<Models.BridgesenseData.Bridgelog> _getBridgelogResult;
+        protected IEnumerable<Bridgesense.Models.BridgesenseData.Bridgelog> getBridgelogResult
+        {
+            get
+            {
+                return _getBridgelogResult;
+            }
+            set
+            {
+                if (!object.Equals(_getBridgelogResult, value))
+                {
+                    var args = new PropertyChangedEventArgs() { Name = "getBridgelogResult", NewValue = value, OldValue = _getBridgelogResult };
+                    _getBridgelogResult = value;
+                    OnPropertyChanged(args);
+                    Reload();
+                }
+            }
+        }
+
+
+
 
 
         IEnumerable<Bridgesense.Models.BridgesenseData.Bridge> _getBridgesResult;
@@ -222,6 +248,25 @@ namespace Bridgesense.Pages
             }
         }
 
+        IEnumerable<Models.BridgesenseData.Bridgelog> _Bridgelogs;
+        protected IEnumerable<Bridgesense.Models.BridgesenseData.Bridgelog> Bridgelogs
+        {
+            get
+            {
+                return _Bridgelogs;
+            }
+            set
+            {
+                if (!object.Equals(_Bridgelogs, value))
+                {
+                    var args = new PropertyChangedEventArgs() { Name = "Bridgelogs", NewValue = value, OldValue = _Bridgelogs };
+                    _Bridgelogs = value;
+                    OnPropertyChanged(args);
+                    Reload();
+                }
+            }
+        }
+
 
         protected override async System.Threading.Tasks.Task OnInitializedAsync()
         {
@@ -237,6 +282,10 @@ namespace Bridgesense.Pages
 
             var bridgesenseDataGetSensorEventCountsResult = await BridgesenseData.GetSensorEventCounts(new Query() { Expand = "Sensor,Bridge" });
             getSensorEventCountsResult = bridgesenseDataGetSensorEventCountsResult;
+
+            var bridgesenseDataGetBridgelogResult = await BridgesenseData.GetBridgelogs(new Query() { Expand = "Bridge" });
+            getBridgelogResult = bridgesenseDataGetBridgelogResult;
+
 
         }
 
@@ -273,11 +322,14 @@ namespace Bridgesense.Pages
 
         protected async System.Threading.Tasks.Task Grid0RowSelect(Bridgesense.Models.BridgesenseData.Bridge args)
         {
+            
             master = args;
 
             if (args == null)
             {
                 Sensors = null;
+                Bridgelogs = null;
+                Bridgestats = null; 
             }
 
             if (args != null)
@@ -286,6 +338,38 @@ namespace Bridgesense.Pages
                 Sensors = bridgesenseDataGetSensorsResult;
                 var bridgesenseDataGetBridgestatsResult = await BridgesenseData.GetBridgestats(new Query() { Filter = $@"i => i.bridge_id == {args.id}" });
                 Bridgestats = bridgesenseDataGetBridgestatsResult;
+
+                var bridgesenseDataGetBridgelogResult = await BridgesenseData.GetBridgelogs(new Query() { Filter = $@"i => i.bridgeid == {args.id}" });
+                Bridgelogs = bridgesenseDataGetBridgelogResult;
+
+                foreach (var stats in Bridgestats)
+                {
+
+                    this.threshold = (stats.avg + (stats.std*2));
+                    
+                }
+                
+
+                foreach (var logs in Bridgelogs)
+                {        
+
+                    if (logs.duration != -1)
+                    {
+                        if (logs.duration >= threshold)
+                        {
+                            
+                            this.dates.Add(logs.timestamp.Date);
+                        }
+                        
+                    }
+                    
+                }
+                
+
+                dates.ForEach(date => Console.WriteLine(date));
+                Console.WriteLine(this.threshold);
+                
+              
             }
         }
         protected async System.Threading.Tasks.Task Grid1RowSelect(Bridgesense.Models.BridgesenseData.Sensor args)
@@ -302,8 +386,43 @@ namespace Bridgesense.Pages
                 var bridgesenseDataGetSensorEventCountsResult = await BridgesenseData.GetSensorEventCounts(new Query() { Filter = $@"i => i.sensor_id == {args.id}" });
                 SensorEventCounts = bridgesenseDataGetSensorEventCountsResult;
             }
+
+
         }
+
+        public DateTime value = DateTime.Now;
+
+        public List<DateTime?> dates = new List<DateTime?>();
+
+        public int? threshold = 0;
+       
         
 
+        public void OnChange(DateTime? value, string name, string format)
+        {
+            Console.WriteLine($"{name} value changed to {value?.ToString(format)}");
+         }
+
+        public void DateRenderSpecial(DateRenderEventArgs args)
+        {
+
+
+            if (dates.Contains(args.Date))
+            {
+                args.Attributes.Add("style", "background-color: #ff6d41; border-color: white;");
+            }
+            
+          
+        }
+
+     
+        void OnTodayClick()
+        {
+            value = DateTime.Now;
+        }
+     
+          
+        
     }
+   
 }

@@ -12,6 +12,7 @@ namespace Bridgesense.Pages
 {
     public partial class MapComponent
     { 
+        
     }
 
 }

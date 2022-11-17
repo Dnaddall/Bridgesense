@@ -12,15 +12,11 @@
   "name": "bridgesense",
   "navigation": [
     "Bridge",
-    "Sensor",
-    "Map",
-    "Copy of Bridge"
+    "Map"
   ],
   "pages": [
     "Bridge",
-    "Sensor",
-    "Map",
-    "Copy of Bridge"
+    "Map"
   ],
   "serverLang": "cs",
   "serverProject": true,

@@ -1,4 +1,4 @@
-﻿
+﻿@page "/"
 @page "/bridge"
 @layout MainLayout
 @inherits Bridgesense.Pages.BridgeComponent
@@ -37,14 +37,37 @@
             </RadzenDataGridColumn>
           </Columns>
         </RadzenDataGrid>
+                
+                <RadzenDatePicker TValue="DateTime" DateRender=@DateRenderSpecial  Change=@(args => OnChange(args, "DatePicker with special dates", "MM/dd/yyyy")) Class="w-100" />
 
-        <RadzenHeading Size="H1" Text="Bridgestats">
+         <RadzenHeading Size="H1" Text="Bridgelog">
+        </RadzenHeading>
+         <RadzenDataGrid @ref="grid4" AllowFiltering="true" AllowPaging="true" AllowSorting="true" Data="@Bridgelogs" FilterMode="Radzen.FilterMode.Advanced" TItem="Bridgesense.Models.BridgesenseData.Bridgelog">
+                    <Columns>
+                        <RadzenDataGridColumn TItem="Bridgesense.Models.BridgesenseData.Bridgelog" FilterProperty="Bridge.id" GroupProperty="Bridge.id" Property="bridgeid" SortProperty="Bridge.id" Title="BridgeId">
+                            <Template Context="data">
+                                @(data.Bridge?.id)
+                            </Template>
+                        </RadzenDataGridColumn>
+                        <RadzenDataGridColumn TItem="Bridgesense.Models.BridgesenseData.Bridgelog" Property="bridgeid" Title="Bridge_id">
+                        </RadzenDataGridColumn>
+                        <RadzenDataGridColumn TItem="Bridgesense.Models.BridgesenseData.Bridgelog" Property="timestamp" Title="timestamp">
+                        </RadzenDataGridColumn>
+                        <RadzenDataGridColumn TItem="Bridgesense.Models.BridgesenseData.Bridgelog" Property="duration" Title="duration">
+                        </RadzenDataGridColumn>
+                    </Columns>
+                </RadzenDataGrid>
+
+              
+
+                <RadzenHeading Size="H1" Text="Bridgestats">
         </RadzenHeading>
 
           <RadzenChart ColorScheme="ColorScheme.Pastel" style="width: 301px">
           <ChildContent>
-            <RadzenPieSeries CategoryProperty="bridge_id" Data="@Bridgestats" ValueProperty="avg">
-            </RadzenPieSeries>
+            <RadzenLineSeries CategoryProperty="bridge_id" Data="@Bridgestats" ValueProperty="avg">
+                <RadzenMarkers MarkerType="MarkerType.Square" />
+            </RadzenLineSeries>
           </ChildContent>
         </RadzenChart>
 

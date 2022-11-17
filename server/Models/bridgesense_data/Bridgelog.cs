@@ -13,7 +13,7 @@ namespace Bridgesense.Models.BridgesenseData
       set;
     }
     public Bridge Bridge { get; set; }
-    public DateTime? timestamp
+    public DateTime timestamp
     {
       get;
       set;
